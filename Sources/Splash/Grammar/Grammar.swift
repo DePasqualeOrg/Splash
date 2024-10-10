@@ -9,7 +9,7 @@ import Foundation
 /// Protocol used to define the grammar of a language to use for
 /// syntax highlighting. See `SwiftGrammar` for a default implementation
 /// of the Swift language grammar.
-public protocol Grammar {
+public protocol Grammar: Sendable {
     /// The set of characters that make up the delimiters that separates
     /// tokens within the language, such as punctuation characters. You
     /// can control whether delimiters should be merged when forming

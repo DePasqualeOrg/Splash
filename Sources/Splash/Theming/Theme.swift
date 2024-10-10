@@ -4,14 +4,17 @@
  *  MIT license - see LICENSE.md
  */
 
-import Foundation
-
 #if !os(Linux)
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import Cocoa
+#endif
 
 /// A theme describes what fonts and colors to use when rendering
 /// certain output formats - such as `NSAttributedString`. Several
 /// default implementations are provided - see Theme+Defaults.swift.
-public struct Theme {
+public struct Theme: Sendable {
     /// What font to use to render the highlighted text
     public var font: Font
     /// What color to use for plain text (no highlighting)

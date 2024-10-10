@@ -12,10 +12,9 @@ import Foundation
 /// Since Splash aims to be cross-platform, it uses this
 /// simplified font representation rather than `NSFont`
 /// or `UIFont`.
-public struct Font {
+public struct Font: Sendable {
     /// The underlying resource used to load the font
     public var resource: Resource
-    /// The size (in points) of the font
     public var size: Double
 
     /// Initialize an instance with a path to a font file
@@ -34,42 +33,53 @@ public struct Font {
 }
 
 public extension Font {
+    /// Sendable representation of a font
+    struct FontRepresentation: Sendable {
+        let name: String
+        let size: Double
+
+        init(name: String, size: Double) {
+            self.name = name
+            self.size = size
+        }
+    }
+
     /// Enum describing how to load the underlying resource for a font
-    enum Resource {
+    enum Resource: Sendable {
         /// Use an appropriate system font
         case system
         /// Use a pre-loaded font
-        case preloaded(Loaded)
+        case preloaded(FontRepresentation)
         /// Load a font file from a given file system path
         case path(String)
     }
 }
 
 internal extension Font {
-    func load() -> Loaded {
+    func load() -> LoadedFont {
         switch resource {
-        case .system:
-            return loadDefaultFont()
-        case .preloaded(let font):
-            return font
-        case .path(let path):
-            return load(fromPath: path) ?? loadDefaultFont()
+            case .system:
+                return loadDefaultFont()
+            case .preloaded(let fontRepresentation):
+                return LoadedFont(name: fontRepresentation.name, size: CGFloat(fontRepresentation.size)) ?? loadDefaultFont()
+            case .path(let path):
+                return load(fromPath: path) ?? loadDefaultFont()
         }
     }
 
-    private func loadDefaultFont() -> Loaded {
-        let font: Loaded?
+    private func loadDefaultFont() -> LoadedFont {
+        let font: LoadedFont?
 
-        #if os(iOS)
+#if os(iOS)
         font = UIFont(name: "Menlo-Regular", size: CGFloat(size))
-        #else
+#else
         font = load(fromPath: "/Library/Fonts/Courier New.ttf")
-        #endif
+#endif
 
         return font ?? .systemFont(ofSize: CGFloat(size))
     }
 
-    private func load(fromPath path: String) -> Loaded? {
+    private func load(fromPath path: String) -> LoadedFont? {
         guard
             let url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, path as CFString, .cfurlposixPathStyle, false),
             let provider = CGDataProvider(url: url),
@@ -89,7 +99,7 @@ internal extension Font {
 import UIKit
 
 public extension Font {
-    typealias Loaded = UIFont
+    typealias LoadedFont = UIFont
 }
 
 #elseif os(macOS)
@@ -97,7 +107,7 @@ public extension Font {
 import Cocoa
 
 public extension Font {
-    typealias Loaded = NSFont
+    typealias LoadedFont = NSFont
 }
 
 #endif

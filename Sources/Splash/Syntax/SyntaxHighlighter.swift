@@ -12,7 +12,7 @@ import Foundation
 /// To initialize this class, pass the desired output format, such as
 /// `AttributedStringOutputFormat` or `HTMLOutputFormat`, or a custom
 /// implementation. One syntax highlighter may be reused multiple times.
-public struct SyntaxHighlighter<Format: OutputFormat> {
+public struct SyntaxHighlighter<Format: OutputFormat>: Sendable {
     private let format: Format
     private let grammar: Grammar
     private let tokenizer = Tokenizer()

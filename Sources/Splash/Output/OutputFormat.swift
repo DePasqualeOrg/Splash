@@ -11,7 +11,7 @@ import Foundation
 /// NSAttributedString outputs, and custom ones can be defined by
 /// conforming to this protocol and passing the implementation to a
 /// syntax highlighter when it's created.
-public protocol OutputFormat {
+public protocol OutputFormat: Sendable {
     /// The type of builder that this output format uses. The builder's
     /// `Output` type determines the output type of the format.
     associatedtype Builder: OutputBuilder

@@ -11,7 +11,7 @@ import Foundation
 /// evaluated, is asked to check whether it matches a given segment
 /// of code. If the rule matches then the rule's token type will be
 /// associated with the given segment's current token.
-public protocol SyntaxRule {
+public protocol SyntaxRule: Sendable {
     /// The token type that this syntax rule represents
     var tokenType: TokenType { get }
 
