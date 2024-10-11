@@ -1,3 +1,7 @@
+This is a fork of `JohnSundell/Splash` that aims to add syntax highlighting for a variety of programming languages. It is currently in active development, and breaking changes are expected. The added grammars are a starting point for development and have a lot of room for improvement. Contributions are welcome.
+
+<hr>
+
 <p align="center">
     <img src="Images/Logo.png" width="528" max-width="90%" alt="Splash" />
 </p>
